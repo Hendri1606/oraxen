@@ -1,0 +1,23 @@
+name: Create Snapshot Release
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.0.0
+      - name: Create Snapshot Release
+        if: needs.build.result == 'success'
+        uses: ncipollo/release-action@v1.13.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref }}
+          name: "develop"
+          body: ${{ github.event.head_commit.message }}
+          allowUpdates: true
+          omitNameDuringUpdate: true
+          prerelease: true
